@@ -7,17 +7,26 @@ st.set_page_config(initial_sidebar_state="collapsed")
 
 pages = ["Diabètes", "Cancer du sein", "Maladie rénale chronique", "Maladie chronique cardiaque", "Maladie du foie"]
 
+image_url = "/Users/lua/wild/project3/wlab_front/img/logo_wlab4 (1).svg"
+
 styles = {
     "nav": {
         "background-color": "#3cd1ce",
         "font-size": "18px",
         "display": "flex",
         "justify-content": "center",
-        "align-items": "center",
         "height": "200px",
+        "width": "100vw",
+        "padding": "none !important" ,
+        
+    },
+    "img": {
+        "url": f"{image_url}",
+        "height": "150px",
+        "margin-left": "-250px",
+        "color": "#fff",
     },
     "div" : {
-        
         "text-decoration": "none",
         "padding": "10px",
         "font-weight": "bold",
@@ -38,8 +47,9 @@ styles = {
     }
 }
 
-menu = st_navbar(pages, styles=styles)
-st.write(menu)
+
+menu = st_navbar(pages, styles=styles, logo_path=image_url)
+# st.write(menu)
 
 
 st.markdown(
@@ -47,6 +57,10 @@ st.markdown(
     <style>
     .main {
         background-color: #fff;
+        
+    }
+    .st-emotion-cache-1629p8f h1 {
+        color: #2a9390;
     }
     .stApp {
         color: #2a9390;
@@ -59,8 +73,15 @@ st.markdown(
         background-color: #2a9390;
         color: white;
     }
+    .st-emotion-cache-h7cybc {
+        background-color: rgb(60, 209, 206, 0.15);
+        border: 1px solid #2a9390;
+    }
+    .st-emotion-cache-6rlrad {
+        color: #2a9390;
+    }
     
-    </style>
+    </style>    
     """,
     unsafe_allow_html=True
 )
@@ -75,12 +96,11 @@ def get_prediction(features, disease_url):
     return response.json()
 
 def predict_disease(disease_name, disease_url):
-    st.header(f"Prédiction de {disease_name}")
     uploaded_file = st.file_uploader(f"Choisissez un fichier CSV pour {disease_name}", type="csv")
 
     if uploaded_file is not None:
         # Lire le fichier CSV
-        df = pd.read_csv(uploaded_file)
+        df = pd.read_csv(uploaded_file, sep=";")
 
         # Afficher les colonnes pour déboguer
         st.write(f"Colonnes lues: {df.columns.tolist()}")
@@ -103,9 +123,9 @@ def predict_disease(disease_name, disease_url):
 # Définir les URL des API pour chaque maladie
 disease_urls = {
     "Diabètes": 'http://127.0.0.1:8000/api/predict_diabetes/',
-    "Cancer du sein": 'http://127.0.0.1:8000/api/predict_cancer_du_sein/',
+    "Cancer du sein": 'http://127.0.0.1:8000/api/predict/cancer/',
     "Maladie rénale chronique": 'http://127.0.0.1:8000/api/predict_renale/',
-    "Maladie chronique cardiaque": 'http://127.0.0.1:8000/api/predict_cardiaque/',
+    "Maladie chronique cardiaque": 'http://127.0.0.1:8000/api/predict/cardiac/',
     "Maladie du foie": 'http://127.0.0.1:8000/api/predict_foie/',
 }
 
