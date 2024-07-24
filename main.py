@@ -80,37 +80,51 @@ st.markdown(
     .st-emotion-cache-6rlrad {
         color: #2a9390;
     }
+    footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        color: #2a9390;
+        padding: 10px;
+        text-align: center;
+
+    }
     
     </style>    
     """,
     unsafe_allow_html=True
 )
 
-st.title("Diagnostique")
+st.title("Diagnostic")
 
 
 
 # Fonction pour faire la prédiction
 def get_prediction(features, disease_url):
     response = requests.post(disease_url, json={'features': features})
-    return response.json()
+    st.write(f"Code de statut HTTP: {response.status_code}")
+    st.write(f"Contenu brut de la réponse: {response.content}")
+    if response.status_code != 200:
+        st.error("La requête a échoué avec le code de statut HTTP: " + str(response.status_code))
+        return None
+    try:
+        return response.json()
+    except ValueError:
+        st.error("La réponse n'est pas un JSON valide.")
+        return None
 
 def predict_disease(disease_name, disease_url):
     uploaded_file = st.file_uploader(f"Choisissez un fichier CSV pour {disease_name}", type="csv")
 
     if uploaded_file is not None:
         # Lire le fichier CSV
-        df = pd.read_csv(uploaded_file, sep=";")
+        df = pd.read_csv(uploaded_file, sep=",")
 
         # Afficher les colonnes pour déboguer
         st.write(f"Colonnes lues: {df.columns.tolist()}")
         st.write(f"Nombre de colonnes: {df.shape[1]}")
 
-        # Vérifier si le fichier contient 30 colonnes
-        # if df.shape[1] != 30:
-        #     st.error("Le fichier CSV doit contenir exactement 30 colonnes.")
-        # else:
-        #     # Afficher le contenu du fichier
         st.write("Contenu du fichier chargé:")
         st.dataframe(df)
 
@@ -118,15 +132,17 @@ def predict_disease(disease_name, disease_url):
         features = df.values.tolist()[0]
         prediction = get_prediction(features, disease_url)
 
-        st.write(f"Prédiction: {'Maligne' if prediction['prediction'] == 1 else 'Bénigne'}")
+        if prediction:
+            st.write(f"Prédiction: {prediction['prediction']}")
+
 
 # Définir les URL des API pour chaque maladie
 disease_urls = {
-    "Diabètes": 'http://127.0.0.1:8000/api/predict_diabetes/',
+    "Diabètes": 'http://127.0.0.1:8000/api/predict/diabetes/',
     "Cancer du sein": 'http://127.0.0.1:8000/api/predict/cancer/',
-    "Maladie rénale chronique": 'http://127.0.0.1:8000/api/predict_renale/',
+    "Maladie rénale chronique": 'http://127.0.0.1:8000/api/predict/renal/',
     "Maladie chronique cardiaque": 'http://127.0.0.1:8000/api/predict/cardiac/',
-    "Maladie du foie": 'http://127.0.0.1:8000/api/predict_foie/',
+    "Maladie du foie": 'http://127.0.0.1:8000/api/predict/foie/',
 }
 
 # Afficher la section correspondante en fonction de l'onglet sélectionné
@@ -140,3 +156,13 @@ elif menu == "Maladie chronique cardiaque":
     predict_disease("Maladie chronique cardiaque", disease_urls["Maladie chronique cardiaque"])
 elif menu == "Maladie du foie":
     predict_disease("Maladie du foie", disease_urls["Maladie du foie"])
+
+
+st.markdown(
+    """
+    <footer>
+        <p>Développé par <span style="font-weight:bold;">Wild's Anatomy ©</span></p>
+    </footer>
+    """,
+    unsafe_allow_html=True
+)
