@@ -3,11 +3,15 @@ import pandas as pd
 import requests
 from streamlit_navigation_bar import st_navbar
 
-st.set_page_config(initial_sidebar_state="collapsed")
+import streamlit as st
+
+st.set_page_config(page_title="WLAB", page_icon="./img/logo_wlab4 (1).svg", layout="wide", initial_sidebar_state="collapsed", menu_items=None)
+
+
 
 pages = ["Diabètes", "Cancer du sein", "Maladie rénale chronique", "Maladie chronique cardiaque", "Maladie du foie"]
 
-image_url = "/Users/lua/wild/project3/wlab_front/img/logo_wlab4 (1).svg"
+image_url = "./img/logo_wlab4 (1).svg"
 
 themes = {
     "Standard": {
@@ -17,14 +21,13 @@ themes = {
         "active-color": "rgba(255, 255, 255, 0.25)"
     },
     "Daltonien": {
-        "background-color": "#ffb3b3",  # Rouge doux
-        "font-color": "#000000",  # Noir
-        "hover-color": "#cc0000",  # Rouge foncé
-        "active-color": "rgba(0, 0, 0, 0.25)"  # Noir transparent
+        "background-color": "#ffb3b3", 
+        "font-color": "#000000",  
+        "hover-color": "#cc0000", 
+        "active-color": "rgba(0, 0, 0, 0.25)"  
     }
 }
 
-# Place the theme selectbox in the upper-right corner
 theme_choice = st.selectbox(
     "Choisissez un thème de couleur :", 
     ["Standard", "Daltonien"], 
@@ -41,8 +44,10 @@ styles = {
         "display": "flex",
         "justify-content": "center",
         "height": "200px",
-        "width": "100vw",
-        "padding": "none !important",
+        "width": "100%",
+        "padding-left": "0px",
+        "padding-right": "0px",
+        
     },
     "img": {
         "url": f"{image_url}",
@@ -72,13 +77,55 @@ styles = {
 }
 
 
-menu = st_navbar(pages, styles=styles, logo_path=image_url)
+menu = st_navbar(pages, styles=styles, logo_path=image_url, adjust=False)
 # st.write(menu)
 st.markdown(
     f"""
     <style>
     .main {{
         background-color: #fff;
+    }}
+    .st-emotion-cache-18ni7ap {{
+        display: none;
+    }}
+    .st-emotion-cache-13ln4jf {{
+        padding-left: 0;
+        padding-right: 0;
+        padding: 0;
+    }}
+    .block-container {{
+        padding-left: 0;
+        padding-right: 0;
+
+    }}
+
+    .ea3mdgi5 {{
+        max-width: 100%;
+    }}
+    .e1f1d6gn2 >div {{
+        max-width: 800px;
+        width: 100%;
+        margin: 0 auto;
+    }}
+    .e1f1d6gn2 >div>div {{
+        max-width: 800px;
+        width: 100%;
+        margin: 0 auto;
+    }}
+    .e1f1d6gn2 >div:nth-of-type(1) {{
+        max-width: 250px;
+        margin:0 auto;
+        padding-left: 270px;
+    }}
+    .e1f1d6gn2 >div:nth-of-type(1)>div {{
+        max-width: 270px;
+    }}
+    .e1f1d6gn2 >div:nth-of-type(2) {{
+        order: -1;
+        margin:0;
+    }}
+    .st-emotion-cache-12fmjuu {{
+        display: none;
     }}
     .st-emotion-cache-1629p8f h1 {{
         color: {selected_theme["hover-color"]};
@@ -101,26 +148,13 @@ st.markdown(
     .st-emotion-cache-6rlrad {{
         color: {selected_theme["hover-color"]};
     }}
-    /* Additional styles to make selectbox more discreet */
+    /* Additional styles to make selectbox more discreet*/ 
     .stSelectbox {{
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background-color: {selected_theme["background-color"]};
-        color: {selected_theme["font-color"]};
-        border: 1px solid {selected_theme["hover-color"]};
-        border-radius: 5px;
-        padding: 5px;
-        z-index: 1000;  /* Ensure it stays on top */
+    
     }}
     .stSelectbox select {{
-        background-color: {selected_theme["background-color"]};
-        color: {selected_theme["font-color"]};
-        border: none;
-        outline: none;
-        padding: 5px;
-        border-radius: 5px;
-    }}
+        
+    }} 
     footer {{
         position: fixed;
         bottom: 0;
@@ -203,3 +237,23 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
+# .stSelectbox {{
+#         position: absolute;
+#         top: 10px;
+#         right: 10px;
+#         background-color: {selected_theme["background-color"]};
+#         color: {selected_theme["font-color"]};
+#         border: 1px solid {selected_theme["hover-color"]};
+#         border-radius: 5px;
+#         padding: 5px;
+#         z-index: 1000;  /* Ensure it stays on top */
+#     }}
+#     .stSelectbox select {{
+#         background-color: {selected_theme["background-color"]};
+#         color: {selected_theme["font-color"]};
+#         border: none;
+#         outline: none;
+#         padding: 5px;
+#         border-radius: 5px;
+#     }} 
